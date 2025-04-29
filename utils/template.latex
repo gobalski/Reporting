@@ -227,13 +227,7 @@ $if(verbatim-in-note)$
 \usepackage{fancyvrb}
 $endif$
 \usepackage{xcolor}
-$if(geometry)$
-$if(beamer)$
-\geometry{$for(geometry)$$geometry$$sep$,$endfor$}
-$else$
-\usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
-$endif$
-$endif$
+\usepackage[a4paper, total={160mm, 230mm}, left=20mm, top=40mm, bottom=40mm]{geometry}
 $if(beamer)$
 \newif\ifbibliography
 $endif$
@@ -494,7 +488,18 @@ $if(logo)$
 $endif$
 $endif$
 
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+
 \begin{document}
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\fancyhead[L]{$title$}
+\fancyhead[R]{Version: $version$}
+\fancyfoot[C]{\thepage}
+
 $if(has-frontmatter)$
 \frontmatter
 $endif$
@@ -502,7 +507,20 @@ $if(title)$
 $if(beamer)$
 \frame{\titlepage}
 $else$
-\maketitle
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1cm}
+	\LARGE
+        \textbf{$title$}
+        \normalsize
+        \\ Version: $version$
+        \\
+        \vspace{1cm}
+        \textbf{$author$}
+	\vfill
+        \includegraphics[width=1\textwidth]{Res/Logo.png}
+    \end{center}
+\end{titlepage}
 $endif$
 $if(abstract)$
 \begin{abstract}
