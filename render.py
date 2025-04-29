@@ -58,12 +58,24 @@ def render_report(report_path, working_path):
         with open(out_path, 'w') as f:
             f.write(content)
 
-def compile_pdf(working_path):
-    pass
+def compile_pdf(working_path, output_path, utils_path):
+    print("compiling pdf")
+    cmd = f"pandoc \
+--standalone \
+--verbose \
+-o {output_path}/report.pdf \
+--resource-path={output_path}/Res \
+--lua-filter={utils_path}/include-files.lua \
+--template={utils_path}/template.latex \
+{working_path}/000_Report.md"
+    print(cmd)
+    os.chdir(working_path)
+    print(os.system("ls"))
+    os.system(cmd)
 
-def compile_html(working_path, output_path, filter_path):
-    print("compiling")
-    cmd = "pandoc --verbose -o " + output_path  + "/report.html --highlight-style=tango --lua-filter=" + filter_path +  "/include-files.lua " + working_path +  "/000_Report.md"
+def compile_html(working_path, output_path, utils_path):
+    print("compiling html")
+    cmd = "pandoc --verbose -o " + output_path  + "/report.html --highlight-style=tango --lua-filter=" + utils_path  +  "/include-files.lua " + working_path +  "/000_Report.md"
     print(cmd)
     os.chdir(working_path)
     os.system(cmd)
@@ -74,9 +86,10 @@ def compile_html(working_path, output_path, filter_path):
 if __name__ == "__main__":
     report_path = sys.argv[1]
     report_path = os.path.abspath(report_path)
-    filter_path = os.path.join(os.getcwd(), "pandoc_filters")
+    utils_path = os.path.join(os.getcwd(), "utils")
     with TemporaryDirectory() as tmp:
         render_report(report_path, tmp)
         shutil.copytree(os.path.join(report_path, "Res"), os.path.join(tmp, "Res"))
-        compile_html(tmp, report_path, filter_path)
+        compile_html(tmp, report_path, utils_path)
+        compile_pdf(tmp, report_path, utils_path)
         print("compiling done")
