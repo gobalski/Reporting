@@ -79,7 +79,7 @@ $BODY$
 ```
 
 # Deployment
-- [ ] #someday install all in a container on iyzlw.de
+- [ ] #someday install as a microservice
 # TODOS
 - [ ] latex template erstellen
 - [ ] hyperlinks? 
