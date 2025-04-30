@@ -1,9 +1,9 @@
 ---
 title: FINDING_TITLE
-Severity: Critical
-CVSS: 10.0 ()
+Severity: Info
+CVSS: N/A
 Assets: Server1
-id: id-1
+id: id-2
 ---
 ## {{id}} // {{title}} // {{Severity}}
 

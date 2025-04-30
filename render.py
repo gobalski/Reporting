@@ -1,30 +1,24 @@
-import re
-import yaml
 from jinja2 import Template
 import sys,os
 from tempfile import TemporaryDirectory
 import shutil
+import frontmatter
 
 def load_md_file(file_path):
     """ Load a Markdown file and return its content and properties. """
     with open(file_path, 'r') as file:
         content = file.read()
 
-    # Assuming the properties are in YAML format at the beginning of the file
-    properties_match = re.search(r'---\s*([\s\S]*?)\s*---', content)
-    properties = None
-    
-    if properties_match:
-        properties_str = properties_match.group(1)
-        properties = yaml.safe_load(properties_str)
-    if properties is None:
-        properties = {}
+    properties = frontmatter.load(file_path).metadata
 
     return content, properties
 
-def render_markdown_with_properties(file_path):
+def render_markdown_with_properties(file_path, findings = None):
     """ Load, parse properties and render Markdown file using Jinja2. """
     content, properties = load_md_file(file_path)
+
+    if findings is not None:
+        properties = {'findings': findings, **properties}
     
     # Create a Jinja2 Template
     template = Template(content)
@@ -35,17 +29,7 @@ def render_markdown_with_properties(file_path):
     return rendered_content
 
 def render_report(report_path, working_path):
-    for file in os.listdir(report_path):
-        print(" [i] rendering " + file)
-        if file[-2:] != 'md':
-            continue
-        file_path = os.path.join(report_path, file)
-        content = render_markdown_with_properties(file_path)
-
-        out_path = os.path.join(working_path, file)
-        with open(out_path, 'w') as f:
-            f.write(content)
-    
+    # render Findings
     os.makedirs(working_path + "/Findings")
     for file in os.listdir(report_path + "/Findings"):
         print(" [i] rendering " + file)
@@ -57,6 +41,32 @@ def render_report(report_path, working_path):
         out_path = os.path.join(working_path + "/Findings", file)
         with open(out_path, 'w') as f:
             f.write(content)
+
+    findings_metadata = load_findings_metadata(report_path)
+    
+    print(" [i] rendering report")
+
+    file_path = os.path.join(report_path, '000_Report.md')
+    content = render_markdown_with_properties(file_path, findings_metadata)
+    out_path = os.path.join(working_path, '000_Report.md')
+
+    with open(out_path, 'w') as f:
+        f.write(content)
+
+    
+
+def load_findings_metadata(report_path):
+    findings_folder = os.path.join(report_path, 'Findings')
+    findings = []
+    for filename in os.listdir(findings_folder):
+        if filename.endswith('.md'):
+            file_path = os.path.join(findings_folder, filename)
+            post = frontmatter.load(file_path)
+            findings_dict = post.metadata
+            findings_dict['filename'] = filename
+            findings.append(findings_dict)
+    print(findings)
+    return findings
 
 def compile_pdf(working_path, output_path, utils_path):
     print("compiling pdf")
@@ -70,7 +80,6 @@ def compile_pdf(working_path, output_path, utils_path):
 {working_path}/000_Report.md"
     print(cmd)
     os.chdir(working_path)
-    print(os.system("ls"))
     os.system(cmd)
 
 def compile_html(working_path, output_path, utils_path):
@@ -81,8 +90,6 @@ def compile_html(working_path, output_path, utils_path):
     os.system(cmd)
 
     
-
-# Example usage:
 if __name__ == "__main__":
     report_path = sys.argv[1]
     report_path = os.path.abspath(report_path)

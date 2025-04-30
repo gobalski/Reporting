@@ -1,22 +1,40 @@
 ---
 title: REPORT_TITLE
-author: prim
+author: Lukas Harlan
 date: 2025-04-29
+toc: true
+version: "1.0"
+toc-depth: "2"
 ---
 
-![](Res/Logo.png)
+# Introduction
+TEXT
 
-```{.include}
-001_Introduction.md
-002_Management_Summary.md
-003_Scope.md
-```
+# Management Summary
+## Overview Findings
+
+
+| Id  | Name | Severity |
+| --- | ---- | -------- |
+{% for f in findings -%}
+| {{ f.id }} | {{ f.title }} | {{ f.Severity }} | 
+{% endfor %}
+
+## Summary
+## Conclusion
+
+# Scope
+
+| IP / URL | Name | Details |
+| -------- | ---- | ------- |
+|          |      |         |
+|          |      |         |
 
 # Findings
 ```{.include}
-Findings/011_Finding1.md
+{% for f in findings -%}
+Findings/{{ f.filename }}
+{% endfor %}
 ```
-
-```{.include}
-999_Appendix.md
-```
+# Appendix
+TEST
