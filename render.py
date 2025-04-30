@@ -79,7 +79,7 @@ def load_findings_metadata(report_path):
         elif sscore < 1:
             f['Severity'] = "Info"
     print(findings)
-    findings = sorted(data, key=lambda x: float(x.get('severity_score', 0)))
+    findings = sorted(data, key=lambda x: float(x.get('severity_score', 0)), reverse=True)
     return findings
 
 def compile_pdf(working_path, output_path, utils_path):
