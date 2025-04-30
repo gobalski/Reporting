@@ -65,6 +65,19 @@ def load_findings_metadata(report_path):
             findings_dict = post.metadata
             findings_dict['filename'] = filename
             findings.append(findings_dict)
+    # replace Severity by severity_score
+    for f in findings:
+        sscore = int(f['severity_score'])
+        if sscore >= 10:
+            f['Severity'] = "Critical"
+        elif sscore >= 7 and sscore < 10:
+            f['Severity'] = "High"
+        elif sscore >= 4 and sscore < 7:
+            f['Severity'] = "Medium"
+        elif sscore >= 1 and sscore < 4:
+            f['Severity'] = "Low"
+        elif sscore < 1:
+            f['Severity'] = "Info"
     print(findings)
     findings = sorted(data, key=lambda x: x.get('severity_score', 0))
     return findings
