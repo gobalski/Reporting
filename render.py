@@ -66,6 +66,7 @@ def load_findings_metadata(report_path):
             findings_dict['filename'] = filename
             findings.append(findings_dict)
     print(findings)
+    findings = sorted(data, key=lambda x: x.get('severity_score', 0))
     return findings
 
 def compile_pdf(working_path, output_path, utils_path):
