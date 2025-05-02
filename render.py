@@ -38,9 +38,9 @@ def render_report(report_path, working_path):
 
     print(" [i] rendering report")
 
-    file_path = os.path.join(report_path, '000_Report.md')
+    file_path = os.path.join(report_path, 'Report.md')
     content = render_markdown_with_properties(file_path, findings_metadata)
-    out_path = os.path.join(working_path, '000_Report.md')
+    out_path = os.path.join(working_path, 'Report.md')
 
     with open(out_path, 'w') as f:
         f.write(content)
@@ -85,14 +85,14 @@ def compile_pdf(working_path, output_path, utils_path):
 --resource-path={output_path}/Res \
 --lua-filter={utils_path}/include-files.lua \
 --template={utils_path}/template.latex \
-{working_path}/000_Report.md"
+{working_path}/Report.md"
     print(cmd)
     os.chdir(working_path)
     os.system(cmd)
 
 def compile_html(working_path, output_path, utils_path):
     print("compiling html")
-    cmd = "pandoc --verbose -o " + output_path  + "/report.html --highlight-style=tango --lua-filter=" + utils_path  +  "/include-files.lua " + working_path +  "/000_Report.md"
+    cmd = "pandoc --verbose -o " + output_path  + "/report.html --highlight-style=tango --lua-filter=" + utils_path  +  "/include-files.lua " + working_path +  "/Report.md"
     print(cmd)
     os.chdir(working_path)
     os.system(cmd)
