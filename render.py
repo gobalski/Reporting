@@ -83,7 +83,6 @@ def load_findings_metadata(report_path):
 def compile_pdf(working_path, output_path, utils_path):
     print("compiling pdf")
     cmd = f"pandoc \
---standalone \
 --verbose \
 -o {output_path}/report.pdf \
 --resource-path={output_path}/Res \
