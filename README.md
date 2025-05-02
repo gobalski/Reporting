@@ -1,88 +1,30 @@
-# Requirements
+# Install 
+## Requirements
 1. pandoc
-2. https://raw.githubusercontent.com/pandoc-ext/include-files/refs/heads/main/include-files.lua
-3. python
-4. jinja2, pyyaml, re, os, shutil
-5. apt install texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra
+2. texlive (pdf2latex)
 
-# Render
-``` shell
-pandoc -o report.html --highlight-style=tango --lua-filter=/root/Downloads/include-files.lua 000_Report.md
+```shell
+git clone https://github.com/gobalski/Reporting.git
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements
+python render.py Template
 ```
-1. process vault with custom python script (jinja templating)
-2. render with pandoc via latex to pdf
-## Python Skript init
-```python
-import re
-import yaml
-from jinja2 import Template
+ 
+# how it works
+Start by copying the Template folder. Then Edit the Report.md File for the sections other then Findings. Do not touch the jinja Templating in there.
+Edit your Findings inside the Findings directory. Each finding is a Markdown file.
 
-def load_md_file(file_path):
-    """ Load a Markdown file and return its content and properties. """
-    with open(file_path, 'r') as file:
-        content = file.read()
-
-    # Assuming the properties are in YAML format at the beginning of the file
-    properties_match = re.search(r'---\s*([\s\S]*?)\s*---', content)
-    
-    if properties_match:
-        properties_str = properties_match.group(1)
-        properties = yaml.safe_load(properties_str)
-        
-    else:
-        properties = {}
-
-    return content, properties
-
-def render_markdown_with_properties(file_path):
-    """ Load, parse properties and render Markdown file using Jinja2. """
-    content, properties = load_md_file(file_path)
-    
-    # Create a Jinja2 Template
-    template = Template(content)
-    
-    # Render the Markdown content by replacing keys with their values
-    rendered_content = template.render(properties)
-
-    return rendered_content
-
-# Example usage:
-if __name__ == "__main__":
-    file_path = 'example.md'  # Your markdown file path
-    rendered_markdown = render_markdown_with_properties(file_path)
-    print(rendered_markdown)
+Render the report by
+```shell
+python render.py <path-to-report-directory>
 ```
 
-## LaTeX template init
-
-```latex
-\documentclass[11pt]{article}
-\usepackage{geometry}
-
-\geometry{margin=1in}
-
-\title{{\Huge \textbf{$title$}}}   % Reference to title
-\author{$author$}                  % Reference to author
-\date{$date$}                      % Reference to date
-
-\begin{document}
-
-\maketitle
-\tableofcontents
-
-\section{Introduction}
-
-% Body content will be added here
-$BODY$
-
-\end{document}
-```
+It uses jinja and pandoc to generate the report. 
 
 # Deployment
 - [ ] #someday install as a microservice
 # TODOS
-- [ ] latex template erstellen
-- [ ] hyperlinks? 
-- [ ] imagecaptions?
-- [ ] #idea auto ms summary table
+- [x] latex template erstellen
+- [x] #idea auto ms summary table
 - [ ] #idea use LLM to generate Summary
