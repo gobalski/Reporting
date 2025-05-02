@@ -28,7 +28,6 @@ TEXT
 | IP / URL | Name | Details |
 | -------- | ---- | ------- |
 |          |      |         |
-|          |      |         |
 
 # Findings
 ```{.include}

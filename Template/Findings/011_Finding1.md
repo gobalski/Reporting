@@ -1,6 +1,6 @@
 ---
 title: FINDING_TITLE
-Severity: Critical
+Severity: High
 severity_score: 9
 CVSS: 10.0 ()
 Assets: Server1
@@ -19,5 +19,10 @@ test code:
 ```python
 print("hello")
 ```
+
+Screenshot:
+
+![Description](../Res/Logo.png)
+
 ### Remediation
 modify `script.py`.

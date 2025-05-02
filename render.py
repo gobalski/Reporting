@@ -8,27 +8,23 @@ def load_md_file(file_path):
     """ Load a Markdown file and return its content and properties. """
     with open(file_path, 'r') as file:
         content = file.read()
-
     properties = frontmatter.load(file_path).metadata
-
     return content, properties
 
 def render_markdown_with_properties(file_path, findings = None):
     """ Load, parse properties and render Markdown file using Jinja2. """
     content, properties = load_md_file(file_path)
-
     if findings is not None:
         properties = {'findings': findings, **properties}
-    # Create a Jinja2 Template
     template = Template(content)
-    # Render the Markdown content by replacing keys with their values
     rendered_content = template.render(properties)
-
     return rendered_content
 
 def render_report(report_path, working_path):
     # render Findings
+    findings_metadata = load_findings_metadata(report_path)
     os.makedirs(working_path + "/Findings")
+
     for file in os.listdir(report_path + "/Findings"):
         print(" [i] rendering " + file)
         if file[-2:] != 'md':
@@ -40,8 +36,6 @@ def render_report(report_path, working_path):
         with open(out_path, 'w') as f:
             f.write(content)
 
-    findings_metadata = load_findings_metadata(report_path)
-    
     print(" [i] rendering report")
 
     file_path = os.path.join(report_path, '000_Report.md')
@@ -50,8 +44,6 @@ def render_report(report_path, working_path):
 
     with open(out_path, 'w') as f:
         f.write(content)
-
-    
 
 def load_findings_metadata(report_path):
     findings_folder = os.path.join(report_path, 'Findings')
@@ -76,7 +68,6 @@ def load_findings_metadata(report_path):
             f['Severity'] = "Low"
         elif sscore < 1:
             f['Severity'] = "Info"
-    print(findings)
     findings = sorted(findings, key=lambda x: float(x.get('severity_score', 0)), reverse=True)
     return findings
 
