@@ -19,10 +19,8 @@ def render_markdown_with_properties(file_path, findings = None):
 
     if findings is not None:
         properties = {'findings': findings, **properties}
-    
     # Create a Jinja2 Template
     template = Template(content)
-    
     # Render the Markdown content by replacing keys with their values
     rendered_content = template.render(properties)
 
@@ -79,7 +77,7 @@ def load_findings_metadata(report_path):
         elif sscore < 1:
             f['Severity'] = "Info"
     print(findings)
-    findings = sorted(data, key=lambda x: float(x.get('severity_score', 0)), reverse=True)
+    findings = sorted(findings, key=lambda x: float(x.get('severity_score', 0)), reverse=True)
     return findings
 
 def compile_pdf(working_path, output_path, utils_path):
