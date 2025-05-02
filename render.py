@@ -68,6 +68,14 @@ def load_findings_metadata(report_path):
             f['Severity'] = "Low"
         elif sscore < 1:
             f['Severity'] = "Info"
+    # update files
+    for filename in os.listdir(findings_folder):
+        file_path = os.path.join(findings_folder, filename)
+        for finding in findings:
+            if finding['filename'] == filename:
+                with open(file_path, 'w') as f:
+                    post = {'metadata': finding}
+                    frontmatter.dump(post, f)
     findings = sorted(findings, key=lambda x: float(x.get('severity_score', 0)), reverse=True)
     return findings
 
