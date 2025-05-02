@@ -46,6 +46,20 @@ def render_report(report_path, working_path):
         f.write(content)
 
 def load_findings_metadata(report_path):
+    def sscore_to_severity(sscore):
+        sscore = float(sscore)
+        if sscore >= 10:
+            severity = "Critical"
+        elif sscore >= 7 and sscore < 10:
+            severity = "High"
+        elif sscore >= 4 and sscore < 7:
+            severity = "Medium"
+        elif sscore >= 1 and sscore < 4:
+            severity = "Low"
+        elif sscore < 1:
+            severity = "Info"
+        return severity
+
     findings_folder = os.path.join(report_path, 'Findings')
     findings = []
     for filename in os.listdir(findings_folder):
@@ -54,28 +68,12 @@ def load_findings_metadata(report_path):
             post = frontmatter.load(file_path)
             findings_dict = post.metadata
             findings_dict['filename'] = filename
+            findings_dict['Severity'] = sscore_to_severity(findings_dict['severity_score'])
             findings.append(findings_dict)
-    # replace Severity by severity_score
-    for f in findings:
-        sscore = float(f['severity_score'])
-        if sscore >= 10:
-            f['Severity'] = "Critical"
-        elif sscore >= 7 and sscore < 10:
-            f['Severity'] = "High"
-        elif sscore >= 4 and sscore < 7:
-            f['Severity'] = "Medium"
-        elif sscore >= 1 and sscore < 4:
-            f['Severity'] = "Low"
-        elif sscore < 1:
-            f['Severity'] = "Info"
-    # update files
-    for filename in os.listdir(findings_folder):
-        file_path = os.path.join(findings_folder, filename)
-        for finding in findings:
-            if finding['filename'] == filename:
-                with open(file_path, 'w') as f:
-                    post = {'metadata': finding}
-                    frontmatter.dump(post, f)
+            with open(file_path, 'wb') as f:
+                print(frontmatter.dumps(post))
+                frontmatter.dump(post, f)
+
     findings = sorted(findings, key=lambda x: float(x.get('severity_score', 0)), reverse=True)
     return findings
 

@@ -1,11 +1,13 @@
 ---
-title: FINDING_TITLE
-Severity: Info
-severity_score: 0
-CVSS: N/A
 Assets: Server1
+CVSS: N/A
+Severity: Info
+filename: 001_Finding.md
 id: id-2
+severity_score: 0
+title: FINDING_TITLE
 ---
+
 ## {{id}} // {{title}} // {{Severity}}
 
 **CVSS**: {{CVSS}}
