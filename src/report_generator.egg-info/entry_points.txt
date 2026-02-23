@@ -1,0 +1,2 @@
+[console_scripts]
+report_generator = report_generator.render:main
