@@ -85,6 +85,7 @@ def compile_pdf(working_path, output_path, utils_path):
 --resource-path={output_path}/Res \
 --lua-filter={utils_path}/include-files.lua \
 --template={utils_path}/template.latex \
+--listings \
 {working_path}/Report.md"
     print(cmd)
     os.chdir(working_path)
@@ -104,7 +105,7 @@ def main():
     with TemporaryDirectory() as tmp:
         render_report(report_path, tmp)
         shutil.copytree(os.path.join(report_path, "Res"), os.path.join(tmp, "Res"))
-        compile_html(tmp, report_path, utils_path)
+        #compile_html(tmp, report_path, utils_path)
         compile_pdf(tmp, report_path, utils_path)
         print("compiling done")
     
