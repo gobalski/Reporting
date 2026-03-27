@@ -236,6 +236,24 @@ $if(listings)$
 \newcommand{\passthrough}[1]{#1}
 \lstset{defaultdialect=[5.3]Lua}
 \lstset{defaultdialect=[x86masm]Assembler}
+\makeatother
+\lstset{
+  backgroundcolor=\color{gray!5}, % light background
+  xleftmargin=0.5cm,                 % left margin of 1 cm
+  xrightmargin=0.5cm,                 % left margin of 1 cm
+  frame=single,                    % optional: draw a frame
+  framerule=0.4pt,
+  rulecolor=\color{black!40},
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  basicstyle=\small\ttfamily,
+  keywordstyle=\bfseries\color{blue!60!black},
+  commentstyle=\itshape\color{green!40!black},
+  stringstyle=\color{orange!60!black},
+  escapeinside={(*@}{@*)},
+}
+\makeatletter
 $endif$
 $if(lhs)$
 \lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
@@ -501,8 +519,8 @@ $endif$
 \pagestyle{fancy}
 \fancyhead{}
 \fancyfoot{}
-\fancyhead[L]{$title$}
-\fancyhead[R]{Version: $version$}
+\fancyhead[L]{\footnotesize $title$}
+\fancyhead[R]{\footnotesize Version: $version$}
 \fancyfoot[C]{\thepage}
 
 $if(has-frontmatter)$
@@ -523,7 +541,7 @@ $else$
         \vspace{1cm}
         \textbf{$author$}
 	\vfill
-        \includegraphics[width=1\textwidth]{Res/Logo.png}
+        % \includegraphics[width=1\textwidth]{Res/Logo.png}
     \end{center}
 \end{titlepage}
 $endif$
